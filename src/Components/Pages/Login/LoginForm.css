@@ -1,0 +1,75 @@
+/* Container principal para centralizar */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Altura da tela para centralizar verticalmente */
+  min-height: 10vh; 
+  background-color: #f4f4f9;
+  font-family: Arial, sans-serif;
+}
+
+/* Estilo do formulário */
+.login-form {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Grupo de rótulo e input */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+/* Estilo do botão de Login */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo da mensagem de feedback */
+.feedback-message {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e9f7ef;
+    border: 1px solid #d0e8d9;
+    color: #0c7a3e;
+    border-radius: 4px;
+}

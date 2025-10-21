@@ -1,7 +1,0 @@
-.body-hello {
-  background: radial-gradient(
-    circle at 70% 60%,
-    var(--gradient-circle),
-    var(--gradient-bg) 60%
-  );
-}

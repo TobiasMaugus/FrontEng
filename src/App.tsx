@@ -5,10 +5,10 @@ import Bg from "./Components/Bg";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import BodyHello from "./Components/Pages/Hello/Body";
-import BodyAbout from "./Components/Pages/About/Body";
-import BodyProjects from "./Components/Pages/Projects/Body";
-import BodyContact from "./Components/Pages/ContactMe/Body";
+import LoginForm from "./Components/Pages/Login/LoginForm";
+import VendaBody from "./Components/Pages/Venda/VendaBody";
+import ProdutoBody from "./Components/Pages/Produto/ProdutoBody";
+import ClienteBody from "./Components/Pages/Cliente/ClienteBody";
 
 function App() {
   return (
@@ -16,10 +16,10 @@ function App() {
       <Bg>
         <Header />
         <Routes>
-          <Route path="/" element={<BodyHello />} />
-          <Route path="/about-me" element={<BodyAbout />} />
-          <Route path="/projects" element={<BodyProjects />} />
-          <Route path="/contact-me" element={<BodyContact />} />
+          <Route path="/" element={<LoginForm />} />
+          <Route path="vendas" element={<VendaBody />} />
+          <Route path="produtos" element={<ProdutoBody />} />
+          <Route path="clientes" element={<ClienteBody />} />
         </Routes>
         <Footer />
       </Bg>
