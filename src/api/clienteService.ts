@@ -1,0 +1,29 @@
+// src/api/clienteService.ts
+import api from "./api";
+import type {Cliente} from "../types/api";
+
+const path = "/clientes"; // ajuste conforme seu controller
+
+export async function listarClientes(): Promise<Cliente[]> {
+    const r = await api.get(path);
+    return r.data;
+}
+
+export async function buscarCliente(id: number): Promise<Cliente> {
+    const r = await api.get(`${path}/${id}`);
+    return r.data;
+}
+
+export async function criarCliente(cliente: Cliente): Promise<Cliente> {
+    const r = await api.post(path, cliente);
+    return r.data;
+}
+
+export async function atualizarCliente(id: number, cliente: Cliente): Promise<Cliente> {
+    const r = await api.put(`${path}/${id}`, cliente);
+    return r.data;
+}
+
+export async function excluirCliente(id: number): Promise<void> {
+    await api.delete(`${path}/${id}`);
+}
