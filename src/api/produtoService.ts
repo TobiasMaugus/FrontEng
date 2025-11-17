@@ -1,6 +1,6 @@
 // src/api/produtoService.ts
 import api from "./api";
-import type {Produto} from "../types/api";
+import type {Produto} from "../types/Produto.ts";
 
 const path = "/produtos";
 

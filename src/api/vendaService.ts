@@ -1,20 +1,19 @@
-// src/api/vendaService.ts
 import api from "./api";
-import type {VendaRequestDTO, VendaResponseDTO} from "../types/api";
+import type { Venda } from "../types/Venda";
 
 const path = "/vendas";
 
-export async function listarVendas(): Promise<VendaResponseDTO[]> {
+export async function listarVendas(): Promise<Venda[]> {
     const r = await api.get(path);
     return r.data;
 }
 
-export async function criarVenda(body: VendaRequestDTO): Promise<VendaResponseDTO> {
+export async function criarVenda(body: Venda): Promise<Venda> {
     const r = await api.post(path, body);
     return r.data;
 }
 
-export async function buscarVenda(id: number): Promise<VendaResponseDTO> {
+export async function buscarVenda(id: number): Promise<Venda> {
     const r = await api.get(`${path}/${id}`);
     return r.data;
 }
