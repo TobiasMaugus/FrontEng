@@ -9,12 +9,23 @@ export async function listarProdutos(): Promise<Produto[]> {
     return r.data;
 }
 
-export async function criarProduto(p: Produto): Promise<Produto> {
-    const r = await api.post(path, p);
+export async function criarProduto(produto: {
+    id: number | undefined;
+    nome: string;
+    categoria: string;
+    preco: number;
+    quantidade: number
+}): Promise<Produto> {
+    const r = await api.post(path, produto);
     return r.data;
 }
 
-export async function atualizarProduto(id: number, p: Produto): Promise<Produto> {
+export async function editarProduto(id: number, p: {
+    nome: string;
+    categoria: string;
+    preco: number;
+    quantidade: number
+}): Promise<Produto> {
     const r = await api.put(`${path}/${id}`, p);
     return r.data;
 }

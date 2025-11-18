@@ -14,12 +14,24 @@ export async function buscarCliente(id: number): Promise<Cliente> {
     return r.data;
 }
 
-export async function criarCliente(cliente: Cliente): Promise<Cliente> {
+export async function criarCliente(cliente: {
+    [p: string]: any;
+    id?: number;
+    nome: string;
+    telefone?: string;
+    cpf?: string
+}): Promise<Cliente> {
     const r = await api.post(path, cliente);
     return r.data;
 }
 
-export async function atualizarCliente(id: number, cliente: Cliente): Promise<Cliente> {
+export async function editarCliente(id: number, cliente: {
+    [p: string]: any;
+    id?: number;
+    nome: string;
+    telefone?: string;
+    cpf?: string
+}): Promise<Cliente> {
     const r = await api.put(`${path}/${id}`, cliente);
     return r.data;
 }
