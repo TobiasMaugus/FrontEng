@@ -3,5 +3,5 @@ export interface Produto {
     nome: string;
     categoria: string;
     preco: number;        // importante: number, não string
-    quantidade: number;
+    quantidadeEstoque: number;
 }

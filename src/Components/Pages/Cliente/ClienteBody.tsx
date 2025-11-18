@@ -56,10 +56,17 @@ export default function ClienteBody() {
 
             <DataTable
                 columns={["ID", "NOME", "TELEFONE", "CPF", "EDITAR", "EXCLUIR"]}
-                data={clientes}
+                data={clientes.map((c) => ({
+                    id: c.id,
+                    nome: c.nome,
+                    telefone: c.telefone,
+                    cpf: c.cpf,
+                    // dataHora é ignorada
+                }))}
                 onEdit={(id) => navigate(`/Clientes/EditarCliente/${id}`)}
                 onDelete={(id) => handleDelete(id)}
             />
+
 
             <Pagination
                 currentPage={currentPage}

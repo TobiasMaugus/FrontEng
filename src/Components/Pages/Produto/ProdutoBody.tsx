@@ -6,25 +6,22 @@ import SearchBar from "../../SearchBar";
 import DataTable from "../../DataTable";
 import Pagination from "../../Pagination";
 
-import type {Produto} from "../../../types/Produto";
+import { listarProdutos, excluirProduto } from "../../../api/produtoService";
+import type { Produto } from "../../../types/Produto";
 
 export default function ProdutoBody() {
     const navigate = useNavigate();
 
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 3; // você pode ajustar depois
 
     useEffect(() => {
         async function fetchProdutos() {
             try {
-                const response = await fetch("http://localhost:8080/produtos");
-                if (!response.ok) throw new Error("Erro ao buscar produtos");
-
-                const data: Produto[] = await response.json();
+                const data = await listarProdutos(); // Agora usa axios com token
                 setProdutos(data);
             } catch (error) {
-                console.error(error);
+                console.error("Erro ao carregar produtos:", error);
             }
         }
 
@@ -35,10 +32,7 @@ export default function ProdutoBody() {
         if (!confirm("Deseja realmente excluir este produto?")) return;
 
         try {
-            await fetch(`http://localhost:8080/produtos/${id}`, {
-                method: "DELETE",
-            });
-
+            await excluirProduto(id); // axios + token
             setProdutos((prev) => prev.filter((p) => p.id !== id));
         } catch (error) {
             console.error("Erro ao excluir:", error);
@@ -63,16 +57,20 @@ export default function ProdutoBody() {
                     "EXCLUIR",
                 ]}
                 data={produtos.map((p) => ({
-                    ...p,
-                    preco: p.preco.toFixed(2).replace(".", ","), // formata exibição
+                    id: p.id,
+                    nome: p.nome,
+                    categoria: p.categoria,
+                    preco: Number(p.preco).toFixed(2).replace(".", ","), // segurança extra
+                    quantidade: p.quantidadeEstoque,
                 }))}
                 onEdit={(id) => navigate(`/Produtos/EditarProduto/${id}`)}
                 onDelete={(id) => handleDelete(id)}
             />
 
+
             <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={3}
                 onPageChange={(p) => setCurrentPage(p)}
             />
         </PageLayout>
