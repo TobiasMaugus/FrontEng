@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import Formulario from "./Form"; // componente genérico
+import Formulario from "./Form";
 
 interface Campo {
   label: string;
@@ -29,44 +29,61 @@ export default function CadastroEdicaoForm({
   const { id } = useParams<{ id: string }>();
   const somenteLeitura = modo === "view";
 
-  const [formData, setFormData] = useState({
-    ...dadosIniciais,
-  });
+  const [formData, setFormData] = useState(dadosIniciais);
   const [loading, setLoading] = useState(false);
+
+  // ----------------------------------------------------
+  // 1️⃣ CARREGAR DADOS DO PRODUTO QUANDO FOR EDITAR
+  // ----------------------------------------------------
+  useEffect(() => {
+    async function carregarDados() {
+      if (modo !== "editar" || !id || tipo !== "produto") return;
+
+      try {
+        const { listarProdutoPorId } = await import("../api/produtoService");
+        const p = await listarProdutoPorId(Number(id));
+
+        setFormData({
+          nome: p.nome,
+          categoria: p.categoria,
+          preco: p.preco,
+          estoque: p.quantidadeEstoque,
+        });
+      } catch (e) {
+        console.error("Erro ao carregar item:", e);
+      }
+    }
+
+    carregarDados();
+  }, [modo, id, tipo]);
+
 
   function handleChange(name: string, value: string | number) {
     if (somenteLeitura) return;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
+  // ----------------------------------------------------
+  // 2️⃣ SALVAR (EDITAR OU CADASTRAR)
+  // ----------------------------------------------------
   async function salvar() {
     if (tipo !== "produto") return;
 
     setLoading(true);
     try {
-      const { nome, categoria, preco, estoque } = formData;
-
-      if (!nome || !categoria || preco === undefined || estoque === undefined) {
-        alert("Preencha todos os campos corretamente!");
-        setLoading(false);
-        return;
-      }
-
       const payload = {
         nome: String(formData.nome),
         categoria: String(formData.categoria),
         preco: Number(formData.preco),
-        quantidadeEstoque: Number(formData.estoque), // deve bater exatamente com o nome do campo
+        quantidadeEstoque: Number(formData.estoque),
       };
 
       if (modo === "cadastrar") {
-        await import("../api/produtoService").then(({ criarProduto }) =>
-            criarProduto(payload)
-        );
+        const { criarProduto } = await import("../api/produtoService");
+        await criarProduto(payload);
       } else if (modo === "editar" && id) {
-        await import("../api/produtoService").then(({ editarProduto }) =>
-            editarProduto(Number(id), payload)
-        );
+        const { editarProduto } = await import("../api/produtoService");
+        await editarProduto(Number(id), payload);
       }
 
       alert("Salvo com sucesso!");
@@ -102,7 +119,7 @@ export default function CadastroEdicaoForm({
                 campos={campos}
                 dadosIniciais={formData}
                 somenteLeitura={somenteLeitura}
-                onChange={(f) => setFormData(f)}
+                onChange={setFormData}
             />
 
             {modo !== "view" && (

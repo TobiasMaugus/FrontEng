@@ -33,3 +33,8 @@ export async function editarProduto(id: number, p: {
 export async function excluirProduto(id: number): Promise<void> {
     await api.delete(`${path}/${id}`);
 }
+
+export async function listarProdutoPorId(id: number): Promise<Produto> {
+    const r = await api.get(`${path}/${id}`);
+    return r.data;
+}

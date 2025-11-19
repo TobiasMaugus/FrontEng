@@ -13,6 +13,8 @@ import type { Produto } from "../../../types/Produto";
 export default function ProdutoBody() {
     const navigate = useNavigate();
 
+    // lista completa (fonte de verdade) e lista exibida (filtrada)
+    const [allProdutos, setAllProdutos] = useState<Produto[]>([]);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -27,6 +29,7 @@ export default function ProdutoBody() {
         async function fetchProdutos() {
             try {
                 const data = await listarProdutos();
+                setAllProdutos(data);
                 setProdutos(data);
             } catch (error) {
                 console.error("Erro ao carregar produtos:", error);
@@ -34,6 +37,23 @@ export default function ProdutoBody() {
         }
         fetchProdutos();
     }, []);
+
+    // ------------------------------
+    // Função de busca (cliente)
+    // ------------------------------
+    function handleSearch(term: string) {
+        const q = (term || "").trim().toLowerCase();
+        if (!q) {
+            // sem termo -> mostra tudo
+            setProdutos(allProdutos);
+            return;
+        }
+        const filtrados = allProdutos.filter((p) =>
+            (p.nome ?? "").toString().toLowerCase().includes(q)
+        );
+        setProdutos(filtrados);
+        setCurrentPage(1); // opcional: volta pra primeira página ao buscar
+    }
 
     // ------------------------------
     // Abrir modal
@@ -51,9 +71,9 @@ export default function ProdutoBody() {
 
         try {
             await excluirProduto(produtoSelecionado.id!);
-            setProdutos((prev) =>
-                prev.filter((p) => p.id !== produtoSelecionado.id)
-            );
+            // remover das duas listas
+            setAllProdutos((prev) => prev.filter((p) => p.id !== produtoSelecionado.id));
+            setProdutos((prev) => prev.filter((p) => p.id !== produtoSelecionado.id));
         } catch (error) {
             console.error("Erro ao excluir:", error);
         } finally {
@@ -67,6 +87,7 @@ export default function ProdutoBody() {
             <SearchBar
                 placeholder="Buscar:"
                 onAdd={() => navigate("/Produtos/CadastrarProduto")}
+                onSearch={handleSearch} // se seu SearchBar aceitar essa prop, ótimo
             />
 
             <DataTable
@@ -86,7 +107,10 @@ export default function ProdutoBody() {
                     preco: Number(p.preco).toFixed(2).replace(".", ","),
                     quantidade: p.quantidadeEstoque,
                 }))}
-                onEdit={(id) => navigate(`/Produtos/EditarProduto/${id}`)}
+                onEdit={(id) => {
+                    const p = produtos.find((prod) => prod.id === id);
+                    if (p) navigate(`/Produtos/EditarProduto/${id}`, { state: { produto: p } });
+                }}
                 onDelete={(id) => {
                     const p = produtos.find((prod) => prod.id === id);
                     if (p) abrirModal(p);
@@ -95,7 +119,7 @@ export default function ProdutoBody() {
 
             <Pagination
                 currentPage={currentPage}
-                totalPages={3}
+                totalPages={Math.max(1, Math.ceil(produtos.length / 10))} // ajustável
                 onPageChange={(p) => setCurrentPage(p)}
             />
 
